@@ -1,1 +1,46 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+class Job {
+    int start;
+    int end;
+    int profit;
+
+    public Job(int start, int end, int profit) {
+        this.start = start;
+        this.end = end;
+        this.profit = profit;
+    }
+}
+
+class JobScheduler {
+    public static void main(String[] args) {
+        List<Job> jobs = new ArrayList<>();
+        jobs.add(new Job(900,1030,100));
+        jobs.add(new Job(1000,1200,500));
+        jobs.add(new Job(1100,1200,300));
+
+        // Sort jobs in decreasing order of profit
+        Collections.sort(jobs, (a, b) -> b.profit - a.profit);
+
+        // Lokesh's selected jobs
+        List<Job> selectedJobs = new ArrayList<>();
+        int lastEndTime = 0;
+        for (Job job : jobs) {
+            if (job.start >= lastEndTime) {
+                selectedJobs.add(job);
+                lastEndTime = job.end;
+            }
+        }
+
+        // Remaining jobs
+        List<Job> remainingJobs = new ArrayList<>(jobs);
+        remainingJobs.removeAll(selectedJobs);
+
+        // Print results
+        System.out.println("Number of remaining jobs: " + remainingJobs.size());
+        int totalEarnings = remainingJobs.stream().mapToInt(j -> j.profit).sum();
+        System.out.println("Total earnings from remaining jobs: " + totalEarnings);
+    }
+}
